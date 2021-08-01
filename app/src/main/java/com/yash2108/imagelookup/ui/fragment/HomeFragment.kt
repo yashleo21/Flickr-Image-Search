@@ -1,5 +1,6 @@
 package com.yash2108.imagelookup.ui.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,12 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
+import com.yash2108.imagelookup.R
 import com.yash2108.imagelookup.databinding.FragmentHomeBinding
 import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.imagelookup.utils.Utils
@@ -145,10 +151,25 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     }
 
     override fun onItemClicked(data: FlickrDataObject, position: Int, transitionView: View) {
-   //     viewModel.currentIssue = data
-       /* activity?.supportFragmentManager?.commit {
-            add<DetailFragment>(R.id.fragment_containing_view)
-            addToBackStack("detailFragment")
-        }*/
+        viewModel.currentItem = data
+
+        val fragment = DetailFragment()
+
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+            R.anim.slide_in_right, R.anim.slide_out_right)
+
+        transaction
+            ?.add(R.id.fragment_containing_view, fragment, "detailFragment")
+            ?.addToBackStack("detail")
+            ?.setReorderingAllowed(true)
+            ?.commit()
+    }
+
+    override fun onDestroyView() {
+        viewModel.homeDataObjectDataLiveData.removeObservers(this)
+        viewModel.homeDataMutableLiveData = MutableLiveData()
+        _binding = null
+        super.onDestroyView()
     }
 }

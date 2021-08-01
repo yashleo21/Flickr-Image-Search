@@ -25,10 +25,13 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     val adapterList = ArrayList<FlickrDataObject>()
 
+    var currentItem: FlickrDataObject? = null
+    var transitionName = ""
+
     @Inject
     lateinit var repository: HomeRepository
 
-    private val homeDataMutableLiveData = MutableLiveData<ResultUI<List<FlickrDataObject>>>()
+    var homeDataMutableLiveData = MutableLiveData<ResultUI<List<FlickrDataObject>>>()
     val homeDataObjectDataLiveData: LiveData<ResultUI<List<FlickrDataObject>>> get() = homeDataMutableLiveData
 
     fun getPhotosList(query: String?, page: Long?, pageSize: Long?) = viewModelScope.launch(Dispatchers.IO) {
