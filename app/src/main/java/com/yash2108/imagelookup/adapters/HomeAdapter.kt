@@ -46,7 +46,7 @@ class HomeAdapter @Inject constructor() : ListAdapter<FlickrDataObject, HomeAdap
                 callback.onItemClicked(getItem(position), position, binding.root)
             }
 
-            binding.ivFavorite.setOnClickListener {
+            binding.cvFavorite.setOnClickListener {
                 if (adapterPosition < 0) return@setOnClickListener
                 val position = adapterPosition
                 getItem(position)?.isFavorite?.let {

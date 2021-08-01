@@ -15,9 +15,9 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.imagelookup.utils.setAspectRatio
 import javax.inject.Inject
 
-class Favoriteadapter @Inject constructor() : ListAdapter<FlickrDataObject, Favoriteadapter.ItemViewHolder>(HomeDiffUtil()) {
+class FavoriteAdapter @Inject constructor() : ListAdapter<FlickrDataObject, FavoriteAdapter.ItemViewHolder>(HomeDiffUtil()) {
 
-    private val TAG = Favoriteadapter::class.simpleName
+    private val TAG = FavoriteAdapter::class.simpleName
     lateinit var callback: Callback
 
     private val requestOptions = RequestOptions().placeholder(R.color.placeholder_color)
@@ -57,7 +57,7 @@ class Favoriteadapter @Inject constructor() : ListAdapter<FlickrDataObject, Favo
                 .transition(withCrossFade())
                 .into(binding.ivImage)
 
-            binding.ivFavorite.visibility = View.GONE
+            binding.cvFavorite.visibility = View.GONE
         }
     }
 

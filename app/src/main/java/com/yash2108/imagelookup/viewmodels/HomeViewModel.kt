@@ -40,13 +40,16 @@ class HomeViewModel @Inject constructor(): ViewModel() {
 
     fun getPhotosList(query: String?, page: Long?, pageSize: Long?) = viewModelScope.launch(Dispatchers.IO) {
         repository.getPhotos(query, page, pageSize)
-            .collect { issue ->
-                homeDataMutableLiveData.postValue(issue)
+            .collect { photos ->
+                homeDataMutableLiveData.postValue(photos)
             }
     }
 
     fun getFavorites() = viewModelScope.launch(Dispatchers.IO) {
         repository.getFavorites()
+            .collect { photos ->
+                favoriteDataMutableLiveData.postValue(photos)
+            }
     }
 
     fun setFavoriteState(data: FlickrDataObject) = viewModelScope.launch(Dispatchers.IO) {

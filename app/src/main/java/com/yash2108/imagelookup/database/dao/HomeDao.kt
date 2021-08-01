@@ -25,6 +25,6 @@ interface HomeDao {
     @Update
     suspend fun updateRecord(flickrDataObject: FlickrDataObject)
 
-    @Query("SELECT * FROM ${Constants.PHOTOS_TABLE} WHERE isFavorite")
+    @Query("SELECT * FROM ${Constants.PHOTOS_TABLE} WHERE isFavorite = 1")
     suspend fun getFavoriteRecords(): List<FlickrDataObject>
 }

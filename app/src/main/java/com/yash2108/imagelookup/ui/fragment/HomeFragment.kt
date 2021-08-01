@@ -57,6 +57,7 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
         initListeners()
         initObservers()
         fetchData()
+        Log.d(TAG, "onview created called")
     }
 
     private fun initListeners() {
@@ -155,7 +156,16 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     }
 
     private fun showFavoriteFragment() {
+        val fragment = FavoriteFragment()
+        val transaction = activity?.supportFragmentManager?.beginTransaction()
+        transaction?.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
+            R.anim.slide_in_right, R.anim.slide_out_right)
 
+        transaction
+            ?.add(R.id.fragment_containing_view, fragment, "favoriteFragment")
+            ?.addToBackStack("favorite")
+            ?.setReorderingAllowed(true)
+            ?.commit()
     }
 
     override fun onItemClicked(data: FlickrDataObject, position: Int, transitionView: View) {
@@ -182,6 +192,7 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     override fun onDestroyView() {
         viewModel.homeDataObjectDataLiveData.removeObservers(this)
         viewModel.homeDataMutableLiveData = MutableLiveData()
+        viewModel.adapterList.clear()
         _binding = null
         super.onDestroyView()
     }

@@ -1,24 +1,24 @@
 package com.yash2108.imagelookup.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.yash2108.imagelookup.R
 import com.yash2108.imagelookup.databinding.FragmentFavoriteBinding
 import com.yash2108.imagelookup.models.FlickrDataObject
-import com.yash2108.openissuesreader.adapters.Favoriteadapter
+import com.yash2108.openissuesreader.adapters.FavoriteAdapter
 import com.yash2108.openissuesreader.models.ResultUI
 import com.yash2108.openissuesreader.viewmodels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoriteFragment: Fragment(), Favoriteadapter.Callback {
+class FavoriteFragment: Fragment(), FavoriteAdapter.Callback {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +26,7 @@ class FavoriteFragment: Fragment(), Favoriteadapter.Callback {
     private val viewModel by activityViewModels<HomeViewModel>()
 
     @Inject
-    lateinit var adapter: Favoriteadapter
+    lateinit var adapter: FavoriteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,9 +73,7 @@ class FavoriteFragment: Fragment(), Favoriteadapter.Callback {
     }
 
     private fun updateAdapter(data: List<FlickrDataObject>) {
-        viewModel.adapterList.addAll(data)
-
-        adapter.submitList(viewModel.adapterList.toList())
+        adapter.submitList(data.toList())
     }
 
 
@@ -98,5 +96,12 @@ class FavoriteFragment: Fragment(), Favoriteadapter.Callback {
             ?.addToBackStack("detail")
             ?.setReorderingAllowed(true)
             ?.commit()
+    }
+
+    override fun onDestroyView() {
+        viewModel.favoriteDataLiveData.removeObservers(this)
+        viewModel.favoriteDataMutableLiveData = MutableLiveData()
+        _binding = null
+        super.onDestroyView()
     }
 }
