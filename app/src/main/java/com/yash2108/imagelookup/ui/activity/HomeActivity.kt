@@ -29,7 +29,6 @@ class HomeActivity : AppCompatActivity() {
     private fun inflateFragment() {
         supportFragmentManager.commit {
             add<HomeFragment>(R.id.fragment_containing_view)
-            addToBackStack("homeFragment")
         }
     }
 }
