@@ -15,7 +15,8 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.imagelookup.utils.setAspectRatio
 import javax.inject.Inject
 
-class FavoriteAdapter @Inject constructor() : ListAdapter<FlickrDataObject, FavoriteAdapter.ItemViewHolder>(HomeDiffUtil()) {
+class FavoriteAdapter @Inject constructor() :
+    ListAdapter<FlickrDataObject, FavoriteAdapter.ItemViewHolder>(HomeDiffUtil()) {
 
     private val TAG = FavoriteAdapter::class.simpleName
     lateinit var callback: Callback
@@ -24,14 +25,21 @@ class FavoriteAdapter @Inject constructor() : ListAdapter<FlickrDataObject, Favo
         .fallback(R.color.placeholder_color)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(ListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ItemViewHolder(
+            ListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bindView(getItem(position), position)
     }
 
-    inner class ItemViewHolder(val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ItemViewHolder(val binding: ListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setAspectRatio(dividedWidth = 1f, aspectRatio = 1f, totalMargin = 40)
@@ -49,7 +57,8 @@ class FavoriteAdapter @Inject constructor() : ListAdapter<FlickrDataObject, Favo
 
 
         fun bindView(data: FlickrDataObject, position: Int) {
-            val imageUrl = "https://farm${data.farm}.staticflickr.com/${data.server}/${data.id}_${data.secret}_m.jpg"
+            val imageUrl =
+                "https://farm${data.farm}.staticflickr.com/${data.server}/${data.id}_${data.secret}_m.jpg"
 
             Glide.with(binding.ivImage)
                 .load(imageUrl)
@@ -61,12 +70,18 @@ class FavoriteAdapter @Inject constructor() : ListAdapter<FlickrDataObject, Favo
         }
     }
 
-    class HomeDiffUtil(): DiffUtil.ItemCallback<FlickrDataObject>() {
-        override fun areItemsTheSame(oldItem: FlickrDataObject, newItem: FlickrDataObject): Boolean {
+    class HomeDiffUtil : DiffUtil.ItemCallback<FlickrDataObject>() {
+        override fun areItemsTheSame(
+            oldItem: FlickrDataObject,
+            newItem: FlickrDataObject
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: FlickrDataObject, newItem: FlickrDataObject): Boolean {
+        override fun areContentsTheSame(
+            oldItem: FlickrDataObject,
+            newItem: FlickrDataObject
+        ): Boolean {
             return oldItem == newItem
         }
     }

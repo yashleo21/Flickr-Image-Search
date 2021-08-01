@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FavoriteFragment: Fragment(), FavoriteAdapter.Callback {
+class FavoriteFragment : Fragment(), FavoriteAdapter.Callback {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
@@ -89,7 +89,8 @@ class FavoriteFragment: Fragment(), FavoriteAdapter.Callback {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction?.setCustomAnimations(
             R.anim.slide_in_right, R.anim.slide_out_right,
-            R.anim.slide_in_right, R.anim.slide_out_right)
+            R.anim.slide_in_right, R.anim.slide_out_right
+        )
 
         transaction
             ?.add(R.id.fragment_containing_view, fragment, "detailFragment")

@@ -8,16 +8,14 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.openissuesreader.models.ResultUI
 import com.yash2108.openissuesreader.repositories.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(): ViewModel() {
+class HomeViewModel @Inject constructor() : ViewModel() {
 
     var query = ""
     var page = 1L
@@ -38,12 +36,13 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     var favoriteDataMutableLiveData = MutableLiveData<ResultUI<List<FlickrDataObject>>>()
     val favoriteDataLiveData: LiveData<ResultUI<List<FlickrDataObject>>> get() = favoriteDataMutableLiveData
 
-    fun getPhotosList(query: String?, page: Long?, pageSize: Long?) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getPhotos(query, page, pageSize)
-            .collect { photos ->
-                homeDataMutableLiveData.postValue(photos)
-            }
-    }
+    fun getPhotosList(query: String?, page: Long?, pageSize: Long?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getPhotos(query, page, pageSize)
+                .collect { photos ->
+                    homeDataMutableLiveData.postValue(photos)
+                }
+        }
 
     fun getFavorites() = viewModelScope.launch(Dispatchers.IO) {
         repository.getFavorites()

@@ -4,6 +4,6 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 
 interface HomeDataSource {
 
-   suspend fun getData(query: String?, page: Long?, pageSize: Long?): List<FlickrDataObject>
+    suspend fun getData(query: String?, page: Long?, pageSize: Long?): List<FlickrDataObject>
 
 }

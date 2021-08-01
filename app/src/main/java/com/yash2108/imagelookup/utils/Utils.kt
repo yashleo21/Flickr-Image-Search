@@ -18,7 +18,6 @@ object Utils {
     fun isConnected(context: Context?): Boolean {
         if (context == null) return false
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            ?: return false
         if (cm.activeNetworkInfo == null) return false
         val netinfo = cm.activeNetworkInfo
         return if (netinfo != null) {

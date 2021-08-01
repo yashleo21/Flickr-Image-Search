@@ -1,23 +1,17 @@
 package com.yash2108.imagelookup.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionInflater
 import com.yash2108.imagelookup.R
 import com.yash2108.imagelookup.databinding.FragmentHomeBinding
 import com.yash2108.imagelookup.models.FlickrDataObject
@@ -26,11 +20,10 @@ import com.yash2108.openissuesreader.adapters.HomeAdapter
 import com.yash2108.openissuesreader.models.ResultUI
 import com.yash2108.openissuesreader.viewmodels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment: Fragment(), HomeAdapter.Callback {
+class HomeFragment : Fragment(), HomeAdapter.Callback {
 
     private val TAG = HomeFragment::class.java.simpleName
 
@@ -61,32 +54,32 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     }
 
     private fun initListeners() {
-        binding.rvItems.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        binding.rvItems.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = adapter.itemCount
-                val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                val lastVisibleItem =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 if (!viewModel.isPaginationCallInProgress && totalItemCount > 0 && lastVisibleItem == (totalItemCount - 1)) {
                     paginateFeed()
                 }
             }
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
         })
 
-        binding.searchView.setOnQueryTextListener(object: androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query?.trim()?.isNotBlank() == true) {
                     if (Utils.isConnected(context)) {
                         viewModel.adapterList.clear()
                         adapter.submitList(emptyList())
                         viewModel.page = 1L
-                        viewModel.query = query ?: ""
+                        viewModel.query = query
                         fetchData()
                     } else {
-                        Toast.makeText(context, "Not connected to internet!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Not connected to internet!", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 binding.searchView.clearFocus()
@@ -158,8 +151,10 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     private fun showFavoriteFragment() {
         val fragment = FavoriteFragment()
         val transaction = activity?.supportFragmentManager?.beginTransaction()
-        transaction?.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-            R.anim.slide_in_right, R.anim.slide_out_right)
+        transaction?.setCustomAnimations(
+            R.anim.slide_in_right, R.anim.slide_out_right,
+            R.anim.slide_in_right, R.anim.slide_out_right
+        )
 
         transaction
             ?.add(R.id.fragment_containing_view, fragment, "favoriteFragment")
@@ -174,8 +169,10 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
         val fragment = DetailFragment()
 
         val transaction = activity?.supportFragmentManager?.beginTransaction()
-        transaction?.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right,
-            R.anim.slide_in_right, R.anim.slide_out_right)
+        transaction?.setCustomAnimations(
+            R.anim.slide_in_right, R.anim.slide_out_right,
+            R.anim.slide_in_right, R.anim.slide_out_right
+        )
 
         transaction
             ?.add(R.id.fragment_containing_view, fragment, "detailFragment")
@@ -185,8 +182,8 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     }
 
     override fun setFavoriteState(data: FlickrDataObject, isFavorite: Boolean, position: Int) {
-        viewModel.adapterList?.elementAtOrNull(position)?.isFavorite = isFavorite
-        viewModel?.setFavoriteState(data)
+        viewModel.adapterList.elementAtOrNull(position)?.isFavorite = isFavorite
+        viewModel.setFavoriteState(data)
     }
 
     override fun onDestroyView() {

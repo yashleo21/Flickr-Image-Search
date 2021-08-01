@@ -14,7 +14,7 @@ import com.yash2108.imagelookup.R
 import com.yash2108.imagelookup.databinding.FragmentDetailBinding
 import com.yash2108.openissuesreader.viewmodels.HomeViewModel
 
-class DetailFragment: Fragment() {
+class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
@@ -24,7 +24,7 @@ class DetailFragment: Fragment() {
     private val requestOptions = RequestOptions()
         .skipMemoryCache(true)
         .diskCacheStrategy(DiskCacheStrategy.NONE)
-        .override(1600,1600)
+        .override(1600, 1600)
         .placeholder(R.color.placeholder_color)
         .fallback(R.color.placeholder_color)
 
@@ -44,7 +44,8 @@ class DetailFragment: Fragment() {
 
     private fun initUI() {
         viewModel.currentItem?.let { data ->
-            val imageUrl = "https://farm${data.farm}.staticflickr.com/${data.server}/${data.id}_${data.secret}_m.jpg"
+            val imageUrl =
+                "https://farm${data.farm}.staticflickr.com/${data.server}/${data.id}_${data.secret}_m.jpg"
             Glide.with(binding.ivImage)
                 .load(imageUrl)
                 .apply(requestOptions)

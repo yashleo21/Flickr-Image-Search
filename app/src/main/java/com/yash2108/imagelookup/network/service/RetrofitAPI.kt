@@ -4,7 +4,6 @@ import com.yash2108.imagelookup.models.HomeDataResponse
 import com.yash2108.openissuesreader.network.Endpoints
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
-import retrofit2.http.Url
 
 interface RetrofitAPI {
 

@@ -11,7 +11,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -32,9 +31,11 @@ abstract class HomeViewModelModule {
 
         @Provides
         @ViewModelScoped
-        fun providesHomeRepository(@LocalDataSource localDataSource: HomeDataSource,
-                                   @RemoteDataSource remoteDataSource: HomeDataSource,
-                                   homeDao: HomeDao): HomeRepository {
+        fun providesHomeRepository(
+            @LocalDataSource localDataSource: HomeDataSource,
+            @RemoteDataSource remoteDataSource: HomeDataSource,
+            homeDao: HomeDao
+        ): HomeRepository {
             return HomeRepository(localDataSource, remoteDataSource, homeDao)
         }
     }

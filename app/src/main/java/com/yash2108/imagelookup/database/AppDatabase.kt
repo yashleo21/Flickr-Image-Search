@@ -6,7 +6,11 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.openissuesreader.database.dao.HomeDao
 
 
-@Database(entities = arrayOf(FlickrDataObject::class), version = Constants.VERSION, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
+@Database(
+    entities = arrayOf(FlickrDataObject::class),
+    version = Constants.VERSION,
+    exportSchema = false
+)
+abstract class AppDatabase : RoomDatabase() {
     abstract fun homeDao(): HomeDao
 }
