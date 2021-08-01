@@ -22,5 +22,6 @@ data class FlickrDataObject(
     var id: String,
     var farm: String?,
     var server: String?,
-    var secret: String?
+    var secret: String?,
+    var isFavorite: Boolean = false
 )

@@ -51,4 +51,16 @@ class HomeRepository constructor(
         return ResultUI.success(it)
     }
 
+    suspend fun setFavoriteState(data: FlickrDataObject) {
+        dao.updateRecord(data)
+    }
+
+    suspend fun getFavorites(): Flow<ResultUI<List<FlickrDataObject>>> {
+        return flow {
+            emit(ResultUI.loading())
+            val result = dao.getFavoriteRecords()
+            emit(ResultUI.success(result))
+        }
+    }
+
 }

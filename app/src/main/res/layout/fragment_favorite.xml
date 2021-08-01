@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:queryHint="photo"/>
+            app:titleTextColor="@color/white"
+            app:title="FAVORITES" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,14 +41,5 @@
         android:visibility="gone"
         tools:visibility="visible"
         android:layout_gravity="bottom"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_favorite_filled"
-        android:contentDescription="Favorite"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

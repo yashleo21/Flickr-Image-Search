@@ -15,9 +15,9 @@ import com.yash2108.imagelookup.models.FlickrDataObject
 import com.yash2108.imagelookup.utils.setAspectRatio
 import javax.inject.Inject
 
-class HomeAdapter @Inject constructor() : ListAdapter<FlickrDataObject, HomeAdapter.ItemViewHolder>(HomeDiffUtil()) {
+class Favoriteadapter @Inject constructor() : ListAdapter<FlickrDataObject, Favoriteadapter.ItemViewHolder>(HomeDiffUtil()) {
 
-    private val TAG = HomeAdapter::class.simpleName
+    private val TAG = Favoriteadapter::class.simpleName
     lateinit var callback: Callback
 
     private val requestOptions = RequestOptions().placeholder(R.color.placeholder_color)
@@ -45,22 +45,6 @@ class HomeAdapter @Inject constructor() : ListAdapter<FlickrDataObject, HomeAdap
 
                 callback.onItemClicked(getItem(position), position, binding.root)
             }
-
-            binding.ivFavorite.setOnClickListener {
-                if (adapterPosition < 0) return@setOnClickListener
-                val position = adapterPosition
-                getItem(position)?.isFavorite?.let {
-                    if (it) {
-                        getItem(position)?.isFavorite = false
-                        binding.ivFavorite.setImageResource(R.drawable.ic_favorite_unfilled)
-                        callback.setFavoriteState(getItem(position), false, position)
-                    } else {
-                        getItem(position)?.isFavorite = true
-                        binding.ivFavorite.setImageResource(R.drawable.ic_favorite_filled)
-                        callback.setFavoriteState(getItem(position), true, position)
-                    }
-                }
-            }
         }
 
 
@@ -73,11 +57,7 @@ class HomeAdapter @Inject constructor() : ListAdapter<FlickrDataObject, HomeAdap
                 .transition(withCrossFade())
                 .into(binding.ivImage)
 
-            if (data.isFavorite) {
-                binding.ivFavorite.setImageResource(R.drawable.ic_favorite_filled)
-            } else {
-                binding.ivFavorite.setImageResource(R.drawable.ic_favorite_unfilled)
-            }
+            binding.ivFavorite.visibility = View.GONE
         }
     }
 
@@ -93,6 +73,5 @@ class HomeAdapter @Inject constructor() : ListAdapter<FlickrDataObject, HomeAdap
 
     interface Callback {
         fun onItemClicked(data: FlickrDataObject, position: Int, transitionView: View)
-        fun setFavoriteState(data: FlickrDataObject, isFavorite: Boolean, position: Int)
     }
 }

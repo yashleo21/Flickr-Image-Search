@@ -96,6 +96,10 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
                 return true
             }
         })
+
+        binding.fabFavorite.setOnClickListener {
+            showFavoriteFragment()
+        }
     }
 
     private fun paginateFeed() {
@@ -150,6 +154,10 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
         viewModel.getPhotosList(viewModel.query, viewModel.page, viewModel.pageSize)
     }
 
+    private fun showFavoriteFragment() {
+
+    }
+
     override fun onItemClicked(data: FlickrDataObject, position: Int, transitionView: View) {
         viewModel.currentItem = data
 
@@ -164,6 +172,11 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
             ?.addToBackStack("detail")
             ?.setReorderingAllowed(true)
             ?.commit()
+    }
+
+    override fun setFavoriteState(data: FlickrDataObject, isFavorite: Boolean, position: Int) {
+        viewModel.adapterList?.elementAtOrNull(position)?.isFavorite = isFavorite
+        viewModel?.setFavoriteState(data)
     }
 
     override fun onDestroyView() {

@@ -12,6 +12,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 
@@ -34,10 +35,21 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     var homeDataMutableLiveData = MutableLiveData<ResultUI<List<FlickrDataObject>>>()
     val homeDataObjectDataLiveData: LiveData<ResultUI<List<FlickrDataObject>>> get() = homeDataMutableLiveData
 
+    var favoriteDataMutableLiveData = MutableLiveData<ResultUI<List<FlickrDataObject>>>()
+    val favoriteDataLiveData: LiveData<ResultUI<List<FlickrDataObject>>> get() = favoriteDataMutableLiveData
+
     fun getPhotosList(query: String?, page: Long?, pageSize: Long?) = viewModelScope.launch(Dispatchers.IO) {
         repository.getPhotos(query, page, pageSize)
             .collect { issue ->
                 homeDataMutableLiveData.postValue(issue)
             }
+    }
+
+    fun getFavorites() = viewModelScope.launch(Dispatchers.IO) {
+        repository.getFavorites()
+    }
+
+    fun setFavoriteState(data: FlickrDataObject) = viewModelScope.launch(Dispatchers.IO) {
+        repository.setFavoriteState(data)
     }
 }
