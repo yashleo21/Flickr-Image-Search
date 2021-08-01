@@ -22,19 +22,25 @@ class HomeRepository constructor(
         pageSize: Long?
     ): Flow<ResultUI<List<FlickrDataObject>>> {
         return flow {
-            if (query?.isBlank() == true) {
+            if (query?.isBlank() == true && page == 1) {
                 emit(fetchLocalData(query, page, pageSize))
             }
-            emit(ResultUI.loading())
-            val result = remoteDataSource.getData(query, page, pageSize)
 
-            dao.deleteAllRcords()
-            dao.insertAllRecords(result)
+            if (query?.isNotBlank() == true) {
+                emit(ResultUI.loading())
+                val result = remoteDataSource.getData(query, page, pageSize)
 
-            emit(ResultUI.success(result))
+                if (result.isNotEmpty()) {
+                    if (page == 1) {
+                        dao.deleteAllRcords()
+                    }
+                    dao.insertAllRecords(result)
+                }
+
+                emit(ResultUI.success(result))
+            }
         }
     }
-
 
     private suspend fun fetchLocalData(
         query: String?,

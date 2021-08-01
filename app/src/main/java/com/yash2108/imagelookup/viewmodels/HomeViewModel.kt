@@ -18,9 +18,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(): ViewModel() {
 
-    var query = "food"
+    var query = ""
     var page = 1L
     var pageSize = 5L
+    var isPaginationCallInProgress = false
+
+    val adapterList = ArrayList<FlickrDataObject>()
 
     @Inject
     lateinit var repository: HomeRepository

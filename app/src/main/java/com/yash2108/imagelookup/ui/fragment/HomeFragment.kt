@@ -5,12 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.yash2108.imagelookup.databinding.FragmentHomeBinding
 import com.yash2108.imagelookup.models.FlickrDataObject
+import com.yash2108.imagelookup.utils.Utils
 import com.yash2108.openissuesreader.adapters.HomeAdapter
 import com.yash2108.openissuesreader.models.ResultUI
 import com.yash2108.openissuesreader.viewmodels.HomeViewModel
@@ -43,8 +48,55 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
+        initListeners()
         initObservers()
         fetchData()
+    }
+
+    private fun initListeners() {
+        binding.rvItems.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val totalItemCount = adapter.itemCount
+                val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (!viewModel.isPaginationCallInProgress && totalItemCount > 0 && lastVisibleItem == (totalItemCount - 1)) {
+                    paginateFeed()
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
+
+        binding.searchView.setOnQueryTextListener(object: androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query?.trim()?.isNotBlank() == true) {
+                    if (Utils.isConnected(context)) {
+                        viewModel.adapterList.clear()
+                        adapter.submitList(emptyList())
+                        viewModel.page = 1L
+                        viewModel.query = query ?: ""
+                        fetchData()
+                    } else {
+                        Toast.makeText(context, "Not connected to internet!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                binding.searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+    }
+
+    private fun paginateFeed() {
+        if (Utils.isConnected(context)) {
+            viewModel.page = viewModel.page + 1
+            fetchData()
+        }
     }
 
     private fun initAdapter() {
@@ -61,17 +113,20 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
     private fun onDataStateLoaded(state: ResultUI<List<FlickrDataObject>>) {
         when (state) {
             is ResultUI.Loading -> {
+                viewModel.isPaginationCallInProgress = true
                 binding.pb.visibility = View.VISIBLE
                 Log.d(TAG, "LOADING TRIGGERED")
             }
 
             is ResultUI.Error -> {
+                viewModel.isPaginationCallInProgress = false
                 binding.pb.visibility = View.GONE
                 Log.d(TAG, "Error triggered")
             }
 
             is ResultUI.Success -> {
                 Log.d(TAG, "Success")
+                viewModel.isPaginationCallInProgress = false
                 binding.pb.visibility = View.GONE
                 updateAdapter(state.data)
             }
@@ -80,7 +135,9 @@ class HomeFragment: Fragment(), HomeAdapter.Callback {
 
     private fun updateAdapter(data: List<FlickrDataObject>) {
         Log.d(TAG, "Update adapter called")
-        adapter.submitList(data.toList())
+        viewModel.adapterList.addAll(data)
+
+        adapter.submitList(viewModel.adapterList.toList())
     }
 
     private fun fetchData() {
